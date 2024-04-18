@@ -1,0 +1,27 @@
+{
+    "development": {
+        "username": "root",
+        "password": "2J1NY3Wd/NfcjZsw8vjuMcvYJi0Ojz59",
+        "database": "asscot_dev",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "dialect": "mysql",
+        "logging": true,
+        "use_env_variable": false,
+        "timezone": "+05:30"
+    },
+    "test": {
+        "username": "root",
+        "password": null,
+        "database": "database_test",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
+}

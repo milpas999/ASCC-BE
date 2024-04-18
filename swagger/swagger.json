@@ -1,0 +1,167 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "TODO tasks management"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001/"
+    }
+  ],
+  "paths": {
+    "/task": {
+      "post": {
+        "tags": [
+          "TODO tasks management"
+        ],
+        "summary": "Create a task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Title of a task"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Description of a task"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created a task.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "409": {
+            "description": "Faild to process due to the conflict."
+          },
+          "422": {
+            "description": "Faild to process due to lacking required parameters."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "TODO tasks management"
+        ],
+        "summary": "Update a task",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Title of a task"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Description of a task"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successfully updated a task.",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "404": {
+            "description": "The task didn't exist."
+          },
+          "422": {
+            "description": "Faild to process due to lacking required parameters."
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "tags": [
+          "TODO tasks management"
+        ],
+        "summary": "Find all tasks",
+        "responses": {
+          "200": {
+            "description": "Successfully found all tasks."
+          }
+        }
+      }
+    },
+    "/task/{id}": {
+      "get": {
+        "tags": [
+          "TODO tasks management"
+        ],
+        "summary": "Find a task by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Task ID",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found a task."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TODO tasks management"
+        ],
+        "summary": "Delete a task",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Task ID",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted a task."
+          }
+        }
+      }
+    }
+  }
+}
