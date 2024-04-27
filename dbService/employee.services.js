@@ -32,7 +32,10 @@ exports.addEmployeeData = async (objParams) => {
       phone,
       userGroupId,
       address,
+      permanentAddress,
       dateOfJoining,
+      dob,
+      anniversaryDate,
       userProfileImageId,
     } = objParams;
 
@@ -42,7 +45,10 @@ exports.addEmployeeData = async (objParams) => {
       mobileNumber: phone,
       userGroupId,
       address,
+      permanentAddress,
       dateOfJoining,
+      dob,
+      anniversaryDate,
       profileImageId: userProfileImageId,
     });
 
@@ -267,7 +273,10 @@ exports.updateEmployeeData = async (objParams) => {
       phone,
       userGroupId,
       address,
+      permanentAddress,
       dateOfJoining,
+      dob,
+      anniversaryDate,
       userProfileImageId,
     } = objParams;
 
@@ -278,7 +287,10 @@ exports.updateEmployeeData = async (objParams) => {
         mobileNumber: phone,
         userGroupId,
         address,
+        permanentAddress,
         dateOfJoining,
+        dob,
+        anniversaryDate,
         profileImageId: userProfileImageId,
       },
       {

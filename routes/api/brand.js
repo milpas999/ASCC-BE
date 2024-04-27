@@ -9,6 +9,7 @@ const {
   updateBrand,
   updateBrandStatus,
   uploadBrandImage,
+  deleteBrandImage,
 } = require("../../controller/brand.controller");
 
 const {
@@ -34,5 +35,6 @@ router.post(
   getMulterSettings("BRAND").single("brandImage"),
   uploadBrandImage
 );
+router.delete("/deleteImage/:brandId/:imageId", deleteBrandImage);
 
 module.exports = router;

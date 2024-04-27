@@ -9,9 +9,13 @@ const {
   updateEmployee,
   updateEmployeeStatus,
   uploadEmployeeImage,
+  deleteEmployeeImage,
 } = require("../../controller/employee.controller");
 
-const { employeeProfilePicture } = require("../../config/helper/multerStorage");
+const {
+  // employeeProfilePicture,
+  getMulterSettings,
+} = require("../../config/helper/multerStorage");
 
 router.post("/", addEmployee);
 router.get("/", getEmployee);
@@ -21,8 +25,10 @@ router.put("/:employeeId", updateEmployee);
 router.patch("/change-status/:employeeId/:status", updateEmployeeStatus);
 router.post(
   "/uploadImage/:employeeId",
-  employeeProfilePicture.single("employeeImage"),
+  // employeeProfilePicture.single("employeeImage"),
+  getMulterSettings("EMP").single("employeeImage"),
   uploadEmployeeImage
 );
+router.delete("/deleteImage/:employeeId/:imageId", deleteEmployeeImage);
 
 module.exports = router;

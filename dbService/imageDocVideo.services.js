@@ -1,11 +1,14 @@
 const path = require("path");
 const _ = require("lodash");
 const Jimp = require("jimp");
+const fs = require("fs");
 
 const { ImageDocVideo } = require("./../models");
 const { getCurrentDateTime } = require("../config/helper/date-utils");
 const { deleteOperation } = require("../config/helper/db-utility");
 const { IMAGE_RESIZE_PARAMS } = require("../config/helper/constants");
+const { getRawJson } = require("../config/helper/utility");
+const { CustomError } = require("../config/helper/customError");
 
 exports.updateResourceWithImageDocVideo = async (objParams) => {
   try {
@@ -30,13 +33,15 @@ exports.updateResourceWithImageDocVideo = async (objParams) => {
 
 exports.getImageDocVideoData = async (objParams) => {
   try {
-    const { relatedId, typeX, resourceType } = objParams;
+    const { relatedId, typeX, resourceType, imgDocVdoId = 0 } = objParams;
 
     const imageDocVideoData = await ImageDocVideo.findAll({
       where: {
         relatedId,
         typeX,
         resourceType,
+        ...(_.toInteger(imgDocVdoId) > 0 && { id: imgDocVdoId }),
+        ...deleteOperation(),
       },
     });
 
@@ -49,15 +54,12 @@ exports.getImageDocVideoData = async (objParams) => {
 
 exports.addImageDocVideoData = async (objParams) => {
   try {
-    console.log("objParams :::::::::::: ", objParams);
     const { relatedId, typeX, resourceType, uploadedFileData } = objParams;
 
     let arrResizedImageDataForDB = [];
 
     if (typeX === "IMG") {
       const resizeParams = IMAGE_RESIZE_PARAMS[resourceType];
-
-      console.log("resizeParams :::::::::::: ", resizeParams);
 
       if (!_.isEmpty(resizeParams) && resizeParams.resized.length > 0) {
         arrResizedImageDataForDB = resizeParams.resized.map(
@@ -94,11 +96,6 @@ exports.addImageDocVideoData = async (objParams) => {
 
       arrResizedImageDataForDB.push(objForOrigImg);
     }
-
-    console.log(
-      "arrResizedImageDataForDB ::::::::::::::: ",
-      arrResizedImageDataForDB
-    );
 
     const transformedObject = {};
 
@@ -169,6 +166,62 @@ const resizeImageAsPerParams = async (uploadedFileData, eachResizeParams) => {
       width: `${+eachResizeParams.width}`,
       height: `${+eachResizeParams.height}`,
     };
+  } catch (error) {
+    console.log("error :: ", error);
+    throw error;
+  }
+};
+
+exports.deleteImageDocVideoData = async (objParams) => {
+  try {
+    const { relatedId, typeX, resourceType, imgDocVdoId } = objParams;
+
+    const currentDateTime = getCurrentDateTime();
+
+    await ImageDocVideo.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          id: imgDocVdoId,
+        },
+      }
+    );
+
+    const arrImgDocVdoData = await this.getImageDocVideoData({
+      relatedId,
+      typeX,
+      resourceType,
+      imgDocVdoId,
+    });
+
+    arrImgDocVdoData.map(async (objEachImgDocVdoData) => {
+      const imgDocVdoDataRaw = await getRawJson(objEachImgDocVdoData);
+
+      const { metaData, resizedParams } = imgDocVdoDataRaw;
+      const objResizedParams = JSON.parse(resizedParams);
+
+      // Loop through each dimension key in the object
+      for (const key of Object.keys(objResizedParams)) {
+        const image = objResizedParams[key];
+        const imagePath = image.targetFileUploadPath;
+
+        // Check if the file exists
+        try {
+          await fs.accessSync(imagePath, fs.constants.F_OK);
+          // Delete the file
+          await fs.unlinkSync(imagePath);
+          console.log(`Deleted image: ${imagePath}`);
+        } catch (err) {
+          console.log("err :::  ", err);
+          // If the file doesn't exist, continue to the next iteration
+          continue;
+        }
+      }
+    });
+
+    return true;
   } catch (error) {
     console.log("error :: ", error);
     throw error;

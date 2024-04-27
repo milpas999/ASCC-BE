@@ -14,6 +14,7 @@ const { getRawJson } = require("../config/helper/utility");
 const {
   addImageDocVideoData,
   updateResourceWithImageDocVideo,
+  deleteImageDocVideoData,
 } = require("../dbService/imageDocVideo.services");
 
 /**
@@ -42,7 +43,10 @@ exports.addEmployee = async (req, res, next) => {
         phone,
         userGroupId,
         address,
+        permanentAddress,
         dateOfJoining,
+        dob,
+        anniversaryDate,
         userProfileImageId,
       },
     } = req;
@@ -53,7 +57,10 @@ exports.addEmployee = async (req, res, next) => {
       phone,
       userGroupId,
       address,
+      permanentAddress,
       dateOfJoining,
+      dob,
+      anniversaryDate,
       userProfileImageId,
     };
 
@@ -121,7 +128,10 @@ exports.updateEmployee = async (req, res, next) => {
         phone,
         userGroupId,
         address,
+        permanentAddress,
         dateOfJoining,
+        dob,
+        anniversaryDate,
         userProfileImageId,
       },
       params: { employeeId },
@@ -134,7 +144,10 @@ exports.updateEmployee = async (req, res, next) => {
       phone,
       userGroupId,
       address,
+      permanentAddress,
       dateOfJoining,
+      dob,
+      anniversaryDate,
       userProfileImageId,
     };
 
@@ -313,7 +326,7 @@ exports.uploadEmployeeImage = async (req, res, next) => {
       relatedId: employeeId,
       typeX,
       uploadedFileData: file,
-      uploadType: "employeeProfilePicture",
+      resourceType: "EMP",
     };
     const imageDovVideoData = await addImageDocVideoData(objParams);
     sendJsonResponse(
@@ -326,6 +339,40 @@ exports.uploadEmployeeImage = async (req, res, next) => {
     );
   } catch (error) {
     console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.deleteEmployeeImage = async (req, res, next) => {
+  try {
+    const {
+      params: { employeeId, imageId },
+    } = req;
+
+    const objParams = {
+      imgDocVdoId: imageId,
+      relatedId: employeeId,
+      typeX: "IMG",
+      resourceType: "EMP",
+    };
+    const imageDovVideoData = await deleteImageDocVideoData(objParams);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      imageDovVideoData,
+      true,
+      "Employee image deleted successfully"
+    );
+  } catch (error) {
+    console.log("error 123 :: ", error);
     sendJsonResponse(
       req,
       res,

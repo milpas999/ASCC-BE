@@ -37,7 +37,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      permanentAddress: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       dateOfJoining: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      dob: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      anniversaryDate: {
         type: DataTypes.DATEONLY,
         allowNull: true,
       },

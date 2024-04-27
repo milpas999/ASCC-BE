@@ -6,6 +6,7 @@ const { getRawJson } = require("../config/helper/utility");
 const {
   updateResourceWithImageDocVideo,
   addImageDocVideoData,
+  deleteImageDocVideoData,
 } = require("../dbService/imageDocVideo.services");
 
 const {
@@ -244,15 +245,27 @@ exports.deleteBrandById = async (req, res, next) => {
   }
 };
 
+/**
+ * Uploads a brand image.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.brandId - The ID of the brand.
+ * @param {Object} req.query - The request query parameters.
+ * @param {string} req.query.typeX - The type of the uploaded file.
+ * @param {Object} req.file - The uploaded file data.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves when the image is uploaded.
+ */
 exports.uploadBrandImage = async (req, res, next) => {
   try {
-    console.log("111111111111111111111111111111111");
     const {
       params: { brandId },
       query: { typeX },
       file,
     } = req;
-    console.log("file ::::::::::::::::: ", file);
+
     const objParams = {
       relatedId: brandId,
       typeX,
@@ -270,6 +283,51 @@ exports.uploadBrandImage = async (req, res, next) => {
     );
   } catch (error) {
     console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+/**
+ * Deletes a brand image.
+ *
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.brandId - The ID of the brand.
+ * @param {string} req.params.imageId - The ID of the image to delete.
+ * @param {Object} res - The HTTP response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves when the image is deleted.
+ */
+exports.deleteBrandImage = async (req, res, next) => {
+  try {
+    const {
+      params: { brandId, imageId },
+    } = req;
+
+    const objParams = {
+      imgDocVdoId: imageId,
+      relatedId: brandId,
+      typeX: "IMG",
+      resourceType: "BRAND",
+    };
+    const imageDovVideoData = await deleteImageDocVideoData(objParams);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      imageDovVideoData,
+      true,
+      "Brand image deleted successfully"
+    );
+  } catch (error) {
+    console.log("error 123 :: ", error);
     sendJsonResponse(
       req,
       res,
