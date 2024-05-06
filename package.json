@@ -4,7 +4,9 @@
     "private": true,
     "scripts": {
         "start": "node ./bin/www",
-        "start-debug": "SET DEBUG=ascott-be:* && node ./bin/www"
+        "start-debug": "SET DEBUG=ascott-be:* && node ./bin/www",
+        "db:migrate:up": "npx sequelize-cli db:migrate",
+        "db:migrate:undo": "npx sequelize-cli db:migrate:undo"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
