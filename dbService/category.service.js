@@ -52,7 +52,7 @@ exports.getCategoryData = async (objParams) => {
   try {
     const {
       filterParams: {
-        pagination: { current = 1, pageSize = 10 } = {},
+        pagination: { current = 1, pageSize = 999 } = {},
         table,
         filter: {
           name = "",

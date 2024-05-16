@@ -5,6 +5,12 @@ exports.IMAGE_UPLOAD_MULTER_SETTINGS = {
   BRAND: {
     path: "images/brandImages/",
   },
+  PRODUCT_IMAGE: {
+    path: "images/productImages/",
+  },
+  PRODUCT_PDF: {
+    path: "documents/product/",
+  }
 
   //   usersProfilePicture: {
   //     path: "images/userprofileimage/",
@@ -55,6 +61,28 @@ exports.IMAGE_RESIZE_PARAMS = {
   EMP: {
     path: "public/uploads/images/employeeProfilePicture/resized/",
     dbPath: "uploads/images/employeeProfilePicture/resized/",
+    resized: [
+      {
+        height: 200,
+        width: 200,
+      },
+      {
+        height: 400,
+        width: 400,
+      },
+      {
+        height: 100,
+        width: 100,
+      },
+      {
+        height: 50,
+        width: 50,
+      },
+    ],
+  },
+  PRODUCT_IMAGE: {
+    path: "public/uploads/images/productImages/resized/",
+    dbPath: "uploads/images/productImages/resized/",
     resized: [
       {
         height: 200,

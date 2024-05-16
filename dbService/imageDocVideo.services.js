@@ -95,6 +95,15 @@ exports.addImageDocVideoData = async (objParams) => {
       };
 
       arrResizedImageDataForDB.push(objForOrigImg);
+    } else {
+      arrResizedImageDataForDB.push({
+        fileDirectory: uploadedFileData.destination,
+        fileDirectoryForDB: uploadedFileData.destination.replace(/public/g, ""),
+        targetFileUploadPath: uploadedFileData.path,
+        targetFileUploadPathForDB: uploadedFileData.path.replace(/public/g, ""),
+        fileNameForStorage: uploadedFileData.filename,
+        dimensionKey: "ORIG",
+      });
     }
 
     const transformedObject = {};

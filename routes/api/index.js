@@ -8,6 +8,7 @@ const employeeRouter = require("./employee");
 const brandRouter = require("./brand");
 const categoryRouter = require("./category");
 const customerBranchRouter = require("./customerBranch");
+const productRouter = require("./product");
 
 const { loginCheck } = require("../../config/middleware");
 
@@ -18,5 +19,6 @@ router.use("/employee", loginCheck, employeeRouter);
 router.use("/brand", loginCheck, brandRouter);
 router.use("/category", loginCheck, categoryRouter);
 router.use("/customer", loginCheck, customerBranchRouter);
+router.use("/product", loginCheck, productRouter);
 
 module.exports = router;
