@@ -121,12 +121,19 @@ exports.getProductData = async (objParams) => {
         } = {},
       } = { pagination: {}, filter: {} },
       productId,
+      arrProductIds = [],
     } = objParams || {};
 
     let productDataWhere = {};
 
     if (!_.isEmpty(productId)) {
       productDataWhere.id = productId;
+    }
+
+    if (!_.isEmpty(arrProductIds)) {
+      productDataWhere.id = {
+        [Op.in]: arrProductIds,
+      };
     }
 
     if (!_.isEmpty(status)) {
