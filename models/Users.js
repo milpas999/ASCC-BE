@@ -86,8 +86,12 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  // User.associate = (models) => {
+  //   // User.hasMany(models.FCMToken, { as: "fcmTokens", foreignKey: "userId" });
+  // };
+
   User.associate = (models) => {
-    // User.hasMany(models.FCMToken, { as: "fcmTokens", foreignKey: "userId" });
+    User.hasMany(models.Notes, { foreignKey: "userId", as: "notes" });
   };
 
   return User;

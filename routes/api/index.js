@@ -10,6 +10,8 @@ const categoryRouter = require("./category");
 const customerBranchRouter = require("./customerBranch");
 const productRouter = require("./product");
 const productInventoryRouter = require("./product-inventory");
+const leadsRouter = require("./leads");
+const notesRouter = require("./notes");
 
 const { loginCheck } = require("../../config/middleware");
 
@@ -22,5 +24,7 @@ router.use("/category", loginCheck, categoryRouter);
 router.use("/customer", loginCheck, customerBranchRouter);
 router.use("/product", loginCheck, productRouter);
 router.use("/product-inventory", loginCheck, productInventoryRouter);
+router.use("/leads", loginCheck, leadsRouter);
+router.use("/notes", loginCheck, notesRouter);
 
 module.exports = router;
