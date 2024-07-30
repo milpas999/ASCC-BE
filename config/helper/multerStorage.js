@@ -21,10 +21,6 @@ exports.employeeProfilePicture = multer({
 });
 
 exports.getMulterSettings = (type) => {
-  console.log(
-    "IMAGE_UPLOAD_MULTER_SETTINGS[type].path :::::::::::::: ",
-    IMAGE_UPLOAD_MULTER_SETTINGS[type].path
-  );
   const multerStorage = multer({
     storage: multer.diskStorage({
       destination: function (req, file, cb) {
@@ -38,8 +34,6 @@ exports.getMulterSettings = (type) => {
       },
     }),
   });
-
-  console.log("multerStorage :::::::::::: ", multerStorage);
 
   return multerStorage;
 };

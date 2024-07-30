@@ -17,13 +17,6 @@ const {
   employeeProfilePicture,
 } = require("../../config/helper/multerStorage");
 
-console.log(
-  'getMulterSettings("BRAND") ::::::::::::::: ',
-  getMulterSettings("BRAND")
-);
-
-console.log("employeeProfilePicture ::::::::::::: ", employeeProfilePicture);
-
 router.post("/", addBrand);
 router.get("/", getBrand);
 router.get("/:brandId", getBrandById);
