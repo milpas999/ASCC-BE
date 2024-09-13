@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Brand = sequelize.define(
-    "Brand",
+  const Amc = sequelize.define(
+    "Amc",
     {
       id: {
         allowNull: false,
@@ -8,19 +8,22 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.BIGINT,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        default: "",
+      customerId: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
       },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
-      serviceCenterURL: {
-        type: DataTypes.STRING,
-        allowNull: true,
         default: "",
+      },
+      startDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      endDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM,
@@ -39,5 +42,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return Brand;
+  Amc.associate = function (models) {
+    Amc.belongsTo(models.Customer, {
+      foreignKey: "customerId",
+      as: "customerDetails",
+    });
+  };
+
+  return Amc;
 };

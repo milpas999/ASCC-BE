@@ -17,11 +17,12 @@ const { getImageDocVideoData } = require("./imageDocVideo.services");
  */
 exports.addbrandData = async (objParams) => {
   try {
-    const { name, description } = objParams;
+    const { name, description, serviceCenterURL } = objParams;
 
     const brandData = await Brand.create({
       name,
       description,
+      serviceCenterURL,
     });
 
     return brandData;
@@ -33,11 +34,12 @@ exports.addbrandData = async (objParams) => {
 
 exports.updateBrandData = async (objParams) => {
   try {
-    const { brandId, name, description } = objParams;
+    const { brandId, name, description, serviceCenterURL } = objParams;
     const data = await Brand.update(
       {
         name,
         description,
+        serviceCenterURL,
       },
       {
         where: {

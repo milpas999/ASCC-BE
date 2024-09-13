@@ -47,6 +47,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0,
       },
+      warrantyTerm: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: "",
+      },
+      warrantyDescription: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        defaultValue: "",
+      },
       gst: {
         type: DataTypes.FLOAT,
         allowNull: true,

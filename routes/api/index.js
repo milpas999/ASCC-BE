@@ -13,6 +13,7 @@ const productInventoryRouter = require("./product-inventory");
 const leadsRouter = require("./leads");
 const notesRouter = require("./notes");
 const tasksRouter = require("./tasks");
+const amcRouter = require("./amc");
 
 const { loginCheck } = require("../../config/middleware");
 
@@ -28,5 +29,6 @@ router.use("/product-inventory", loginCheck, productInventoryRouter);
 router.use("/leads", loginCheck, leadsRouter);
 router.use("/notes", loginCheck, notesRouter);
 router.use("/tasks", loginCheck, tasksRouter);
+router.use("/amc", loginCheck, amcRouter);
 
 module.exports = router;

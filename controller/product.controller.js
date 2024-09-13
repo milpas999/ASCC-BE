@@ -41,6 +41,8 @@ exports.addProduct = async (req, res, next) => {
         hsnCode,
         modelNumber,
         warrenty,
+        warrantyTerm,
+        warrantyDescription,
         gstRate,
         productImageId,
         productManualId,
@@ -56,6 +58,8 @@ exports.addProduct = async (req, res, next) => {
       hsnCode,
       modelNumber,
       warrenty,
+      warrantyTerm,
+      warrantyDescription,
       gstRate,
     };
 
@@ -186,6 +190,8 @@ exports.updateProduct = async (req, res, next) => {
         hsnCode,
         modelNumber,
         warrenty,
+        warrantyTerm,
+        warrantyDescription,
         gstRate,
         productImageId,
         productManualId,
@@ -201,6 +207,8 @@ exports.updateProduct = async (req, res, next) => {
       hsnCode,
       modelNumber,
       warrenty,
+      warrantyTerm,
+      warrantyDescription,
       gstRate,
       productId,
     };

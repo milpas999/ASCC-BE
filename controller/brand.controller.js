@@ -32,12 +32,13 @@ const {
 exports.addBrand = async (req, res, next) => {
   try {
     const {
-      body: { name, description, brandImageId },
+      body: { name, description, serviceCenterURL, brandImageId },
     } = req;
 
     const objParams = {
       name,
       description,
+      serviceCenterURL,
     };
 
     const newBrand = await addbrandData(objParams);
@@ -147,12 +148,13 @@ exports.updateBrand = async (req, res, next) => {
   try {
     const {
       params: { brandId },
-      body: { name, description, brandImageId },
+      body: { name, description, serviceCenterURL, brandImageId },
     } = req;
 
     const objParamsForBrandUpdate = {
       name,
       description,
+      serviceCenterURL,
       brandImageId,
       brandId,
     };

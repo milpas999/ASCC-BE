@@ -27,6 +27,8 @@ exports.addProductData = async (objParams) => {
       hsnCode,
       modelNumber,
       warrenty,
+      warrantyTerm,
+      warrantyDescription,
       gstRate,
     } = objParams;
 
@@ -39,6 +41,8 @@ exports.addProductData = async (objParams) => {
       hsnCode,
       modelNumber,
       warrenty,
+      warrantyTerm,
+      warrantyDescription,
       gst: gstRate,
     });
 
@@ -60,6 +64,8 @@ exports.updateProductData = async (objParams) => {
       hsnCode,
       modelNumber,
       warrenty,
+      warrantyTerm,
+      warrantyDescription,
       gstRate,
       productId,
     } = objParams;
@@ -74,6 +80,8 @@ exports.updateProductData = async (objParams) => {
         hsnCode,
         modelNumber,
         warrenty,
+        warrantyTerm,
+        warrantyDescription,
         gst: gstRate,
       },
       {
