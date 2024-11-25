@@ -11,45 +11,29 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BIGINT,
         allowNull: false,
       },
-      name: {
+      branchName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      department: {
+      branchAddress: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      contactPersonName: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      contactPersonPosition: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       location: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      branchAddress: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      branchContactNumber: {
+      contactPersonName: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      branchAlternateContactNumber: {
+      contactPersonDesignation: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      branchEmail: {
+      contactPersonMobileNumber: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      description: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
       },
       flagDefault: {
         type: DataTypes.ENUM,
@@ -85,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Branch.associate = (models) => {
     Branch.belongsTo(models.Customer, { foreignKey: "customerId" });
+
+    Branch.hasMany(models.Department, {
+      foreignKey: "branchId",
+      as: "departments", // Optional alias
+    });
   };
 
   return Branch;

@@ -15,6 +15,11 @@ const {
   updateCustomerBranch,
   deleteCustomerBranch,
   setDefaultCustomerBranch,
+  addDepartment,
+  getDepartment,
+  getDepartmentById,
+  updateDepartment,
+  deleteDepartment,
 } = require("../../controller/customerBranch.controller");
 
 // customer API
@@ -31,6 +36,25 @@ router.get("/:customerId/branch", getCustomerBranch);
 router.get("/:customerId/branch/:branchId", getCustomerBranchById);
 router.put("/:customerId/branch/:branchId", updateCustomerBranch);
 router.delete("/:customerId/branch/:branchId", deleteCustomerBranch);
-router.patch("/:customerId/branch/set-default/:branchId", setDefaultCustomerBranch);
+router.patch(
+  "/:customerId/branch/set-default/:branchId",
+  setDefaultCustomerBranch
+);
+
+// department API
+router.post("/:customerId/branch/:branchId/department", addDepartment);
+router.get("/:customerId/branch/:branchId/department", getDepartment);
+router.get(
+  "/:customerId/branch/:branchId/department/:departmentId",
+  getDepartmentById
+);
+router.put(
+  "/:customerId/branch/:branchId/department/:departmentId",
+  updateDepartment
+);
+router.delete(
+  "/:customerId/branch/:branchId/department/:departmentId",
+  deleteDepartment
+);
 
 module.exports = router;

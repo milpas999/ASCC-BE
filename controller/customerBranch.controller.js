@@ -14,6 +14,10 @@ const {
   updateCustomerBranchData,
   deleteCustomerBranchData,
   setDefaultCustomerBranchData,
+  addCustomerBranchDepartmentData,
+  getCustomerBranchDepartmentData,
+  updateDepartmentData,
+  deleteDepartmentData,
 } = require("../dbService/customerBranch.service");
 const { body } = require("express-validator");
 
@@ -36,10 +40,13 @@ exports.addCustomer = async (req, res, next) => {
   try {
     const {
       body: {
-        name,
+        companyName,
+        customerName,
+        contactNumber,
         website,
         address,
         phone,
+        location,
         dob,
         anniversaryDate,
         description,
@@ -47,10 +54,13 @@ exports.addCustomer = async (req, res, next) => {
     } = req;
 
     const objParams = {
-      name,
+      companyName,
+      customerName,
+      contactNumber,
       website,
       address,
       phone,
+      location,
       dob,
       anniversaryDate,
       description,
@@ -206,10 +216,13 @@ exports.updateCustomer = async (req, res, next) => {
     const {
       params: { customerId },
       body: {
-        name,
+        companyName,
+        customerName,
+        contactNumber,
         website,
         address,
         phone,
+        location,
         dob,
         anniversaryDate,
         description,
@@ -217,10 +230,13 @@ exports.updateCustomer = async (req, res, next) => {
     } = req;
 
     const objParamsForBrandUpdate = {
-      name,
+      companyName,
+      customerName,
+      contactNumber,
       website,
       address,
       phone,
+      location,
       dob,
       anniversaryDate,
       description,
@@ -235,7 +251,7 @@ exports.updateCustomer = async (req, res, next) => {
       200,
       customerListData,
       true,
-      "Customer data fetched"
+      "Customer data updated"
     );
   } catch (error) {
     console.log("error :: ", error);
@@ -291,31 +307,23 @@ exports.addCustomerBranchData = async (req, res, next) => {
   try {
     const {
       body: {
-        name,
-        department,
-        contactPersonName,
-        contactPersonPosition,
-        location,
+        branchName,
         branchAddress,
-        branchContactNumber,
-        branchAlternateContactNumber,
-        branchEmail,
-        description,
+        location,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
       },
       params: { customerId },
     } = req;
 
     const objCustomerBranch = {
-      name,
-      department,
-      contactPersonName,
-      contactPersonPosition,
-      location,
+      branchName,
       branchAddress,
-      branchContactNumber,
-      branchAlternateContactNumber,
-      branchEmail,
-      description,
+      location,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
       customerId,
     };
 
@@ -409,31 +417,23 @@ exports.updateCustomerBranch = async (req, res, next) => {
   try {
     const {
       body: {
-        name,
-        department,
-        contactPersonName,
-        contactPersonPosition,
-        location,
+        branchName,
         branchAddress,
-        branchContactNumber,
-        branchAlternateContactNumber,
-        branchEmail,
-        description,
+        location,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
       },
       params: { customerId, branchId },
     } = req;
 
     const objCustomerBranch = {
-      name,
-      department,
-      contactPersonName,
-      contactPersonPosition,
-      location,
+      branchName,
       branchAddress,
-      branchContactNumber,
-      branchAlternateContactNumber,
-      branchEmail,
-      description,
+      location,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
       customerId,
       branchId,
     };
@@ -503,6 +503,201 @@ exports.setDefaultCustomerBranch = async (req, res, next) => {
       {},
       true,
       "Customer branch deleted successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.addDepartment = async (req, res, next) => {
+  try {
+    const {
+      body: {
+        departmentName,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
+        alternateContactNumber,
+        email,
+        description,
+      },
+      params: { customerId, branchId },
+    } = req;
+
+    const objCustomerBranchDepartment = {
+      departmentName,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
+      alternateContactNumber,
+      email,
+      description,
+      customerId,
+      branchId,
+    };
+
+    const customerbranchDepartmentData = await addCustomerBranchDepartmentData(
+      objCustomerBranchDepartment
+    );
+
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      customerbranchDepartmentData,
+      true,
+      "Department added successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.getDepartment = async (req, res, next) => {
+  try {
+    const {
+      query: { filterParams },
+      params: { customerId, branchId },
+    } = req;
+
+    const departmentListData = await getCustomerBranchDepartmentData({
+      ...filterParams,
+      customerId,
+      branchId,
+    });
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      departmentListData,
+      true,
+      "Customer branch list fetched"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.getDepartmentById = async (req, res, next) => {
+  try {
+    const {
+      params: { customerId, branchId, departmentId },
+    } = req;
+
+    const departmentListData = await getCustomerBranchDepartmentData({
+      customerId,
+      branchId,
+      departmentId,
+    });
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      departmentListData,
+      true,
+      "Department fetched"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.updateDepartment = async (req, res, next) => {
+  try {
+    const {
+      body: {
+        departmentName,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
+        alternateContactNumber,
+        email,
+        description,
+      },
+      params: { customerId, branchId, departmentId },
+    } = req;
+
+    const objDepartmentData = {
+      departmentName,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
+      alternateContactNumber,
+      email,
+      description,
+      customerId,
+      branchId,
+      departmentId,
+    };
+
+    const departmentData = await updateDepartmentData(objDepartmentData);
+
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      departmentData,
+      true,
+      "Department updated successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.deleteDepartment = async (req, res, next) => {
+  try {
+    const {
+      params: { customerId, branchId, departmentId },
+    } = req;
+    await deleteDepartmentData(customerId, branchId, departmentId);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {},
+      true,
+      "Department deleted successfully"
     );
   } catch (error) {
     console.log("error :: ", error);

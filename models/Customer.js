@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
+      companyName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      customerName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -21,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       phone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      location: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -69,6 +77,11 @@ module.exports = (sequelize, DataTypes) => {
     Customer.hasMany(models.Leads, {
       foreignKey: "customerId",
       as: "leads",
+    });
+
+    Customer.hasMany(models.Department, {
+      foreignKey: "customerId",
+      as: "departments", // Optional alias
     });
   };
 

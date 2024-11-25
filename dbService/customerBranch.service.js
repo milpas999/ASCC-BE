@@ -1,6 +1,6 @@
 const _ = require("lodash");
 
-const { Customer, Branch } = require("../models");
+const { Customer, Branch, Department } = require("../models");
 const { getCurrentDateTime } = require("../config/helper/date-utils");
 const { deleteOperation } = require("../config/helper/db-utility");
 const { Op } = require("sequelize");
@@ -8,14 +8,26 @@ const { getRawJson } = require("../config/helper/utility");
 
 exports.addCustomerData = async (objParams) => {
   try {
-    const { name, website, address, phone, dob, anniversaryDate, description } =
-      objParams;
-
-    const customerData = await Customer.create({
-      name,
+    const {
+      companyName,
+      customerName,
+      contactNumber,
       website,
       address,
       phone,
+      location,
+      dob,
+      anniversaryDate,
+      description,
+    } = objParams;
+
+    const customerData = await Customer.create({
+      companyName,
+      customerName,
+      phone: contactNumber,
+      website,
+      address,
+      location,
       dob,
       anniversaryDate,
       description,
@@ -141,10 +153,13 @@ exports.deleteCustomerData = async (customerId) => {
 exports.updateCustomerData = async (objParams) => {
   try {
     const {
-      name,
+      companyName,
+      customerName,
+      contactNumber,
       website,
       address,
       phone,
+      location,
       dob,
       anniversaryDate,
       description,
@@ -152,10 +167,12 @@ exports.updateCustomerData = async (objParams) => {
     } = objParams;
     const customerData = await Customer.update(
       {
-        name,
+        companyName,
+        customerName,
+        phone: contactNumber,
         website,
         address,
-        phone,
+        location,
         dob,
         anniversaryDate,
         description,
@@ -195,30 +212,22 @@ exports.updateCategoryStatusData = async (customerId, status) => {
 exports.addCustomerBranchData = async (objParams) => {
   try {
     const {
-      name,
-      department,
-      contactPersonName,
-      contactPersonPosition,
-      location,
+      branchName,
       branchAddress,
-      branchContactNumber,
-      branchAlternateContactNumber,
-      branchEmail,
-      description,
+      location,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
       customerId,
     } = objParams;
 
     const customerData = await Branch.create({
-      name,
-      department,
-      contactPersonName,
-      contactPersonPosition,
-      location,
+      branchName,
       branchAddress,
-      branchContactNumber,
-      branchAlternateContactNumber,
-      branchEmail,
-      description,
+      location,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
       customerId,
     });
 
@@ -232,32 +241,24 @@ exports.addCustomerBranchData = async (objParams) => {
 exports.updateCustomerBranchData = async (objParams) => {
   try {
     const {
-      name,
-      department,
-      contactPersonName,
-      contactPersonPosition,
-      location,
+      branchName,
       branchAddress,
-      branchContactNumber,
-      branchAlternateContactNumber,
-      branchEmail,
-      description,
+      location,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
       customerId,
       branchId,
     } = objParams;
 
     const customerBranchData = await Branch.update(
       {
-        name,
-        department,
-        contactPersonName,
-        contactPersonPosition,
-        location,
+        branchName,
         branchAddress,
-        branchContactNumber,
-        branchAlternateContactNumber,
-        branchEmail,
-        description,
+        location,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
       },
       {
         where: {
@@ -300,7 +301,7 @@ exports.getCustomerBranchData = async (objParams) => {
         pagination: { current = 1, pageSize = 10 } = {},
         table,
         filter: {
-          name = "",
+          branchName = "",
           contactPersonName = "",
           status = "",
           branchAddress = "",
@@ -325,9 +326,9 @@ exports.getCustomerBranchData = async (objParams) => {
       customerBranchDataWhere.status = status;
     }
 
-    if (!_.isEmpty(name)) {
-      customerBranchDataWhere.name = {
-        [Op.like]: `%${name}%`,
+    if (!_.isEmpty(branchName)) {
+      customerBranchDataWhere.branchName = {
+        [Op.like]: `%${branchName}%`,
       };
     }
 
@@ -351,7 +352,11 @@ exports.getCustomerBranchData = async (objParams) => {
     let sorterOrder = "ASC";
 
     if (!_.isEmpty(table) && !_.isEmpty(table.sorter)) {
-      const { column = [], order = "ascend", field = "name" } = table.sorter;
+      const {
+        column = [],
+        order = "ascend",
+        field = "branchName",
+      } = table.sorter;
       sorterOrder = order === "ascend" ? "ASC" : "DESC";
       sorterField = field;
     }
@@ -423,6 +428,187 @@ exports.setDefaultCustomerBranchData = async (customerId, branchId) => {
           customerId,
           id: branchId,
           ...deleteOperation(),
+        },
+      }
+    );
+
+    return true;
+  } catch (error) {
+    console.log("error :: ", error);
+    return error;
+  }
+};
+
+exports.addCustomerBranchDepartmentData = async (objParams) => {
+  try {
+    const {
+      departmentName,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
+      alternateContactNumber,
+      email,
+      description,
+      customerId,
+      branchId,
+    } = objParams;
+
+    const departmentData = await Department.create({
+      departmentName,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
+      alternateContactNumber,
+      email,
+      description,
+      customerId,
+      branchId,
+    });
+
+    return departmentData;
+  } catch (error) {
+    console.log("error :: ", error);
+    throw error;
+  }
+};
+
+exports.getCustomerBranchDepartmentData = async (objParams) => {
+  try {
+    const {
+      filterParams: {
+        pagination: { current = 1, pageSize = 10 } = {},
+        table,
+        filter: {
+          departmentName = "",
+          contactPersonName = "",
+          status = "",
+          branchAddress = "",
+          flagDefault = "",
+        } = {},
+      } = { pagination: {}, filter: {} },
+      customerId,
+      branchId,
+      departmentId = "",
+    } = objParams || {};
+
+    let customerBranchDepartmentDataWhere = {};
+
+    if (!_.isEmpty(departmentId)) {
+      customerBranchDepartmentDataWhere.id = departmentId;
+    }
+
+    if (!_.isEmpty(customerId)) {
+      customerBranchDepartmentDataWhere.customerId = customerId;
+    }
+
+    if (!_.isEmpty(branchId)) {
+      customerBranchDepartmentDataWhere.branchId = branchId;
+    }
+
+    if (!_.isEmpty(status)) {
+      customerBranchDepartmentDataWhere.status = status;
+    }
+
+    if (!_.isEmpty(departmentName)) {
+      customerBranchDepartmentDataWhere.departmentName = {
+        [Op.like]: `%${departmentName}%`,
+      };
+    }
+
+    if (!_.isEmpty(contactPersonName)) {
+      customerBranchDepartmentDataWhere.contactPersonName = {
+        [Op.like]: `%${contactPersonName}%`,
+      };
+    }
+
+    let sorterField = "id";
+    let sorterOrder = "ASC";
+
+    if (!_.isEmpty(table) && !_.isEmpty(table.sorter)) {
+      const {
+        column = [],
+        order = "ascend",
+        field = "departmentName",
+      } = table.sorter;
+      sorterOrder = order === "ascend" ? "ASC" : "DESC";
+      sorterField = field;
+    }
+    const offset = (current - 1) * pageSize;
+
+    let departmentListData = await Department.findAll({
+      where: {
+        ...customerBranchDepartmentDataWhere,
+        ...deleteOperation(),
+      },
+      limit: _.toInteger(pageSize),
+      offset: _.toInteger(offset),
+      order: [[sorterField, sorterOrder]],
+    });
+
+    const dataCount = await Department.count({
+      where: { ...customerBranchDepartmentDataWhere, ...deleteOperation() },
+    });
+
+    return { data: departmentListData, dataCount };
+  } catch (error) {
+    console.log("error :: ", error);
+    throw error;
+  }
+};
+
+exports.updateDepartmentData = async (objParams) => {
+  try {
+    const {
+      departmentName,
+      contactPersonName,
+      contactPersonDesignation,
+      contactPersonMobileNumber,
+      alternateContactNumber,
+      email,
+      description,
+      customerId,
+      branchId,
+      departmentId,
+    } = objParams;
+
+    const departmentData = await Department.update(
+      {
+        departmentName,
+        contactPersonName,
+        contactPersonDesignation,
+        contactPersonMobileNumber,
+        alternateContactNumber,
+        email,
+        description,
+      },
+      {
+        where: {
+          id: departmentId,
+          branchId,
+          customerId,
+        },
+      }
+    );
+
+    return departmentData;
+  } catch (error) {
+    console.log("error :: ", error);
+    throw error;
+  }
+};
+
+exports.deleteDepartmentData = async (customerId, branchId, departmentId) => {
+  try {
+    const currentDateTime = getCurrentDateTime();
+    await Department.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          id: departmentId,
+          branchId,
+          customerId,
         },
       }
     );
