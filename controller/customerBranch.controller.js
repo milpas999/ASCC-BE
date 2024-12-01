@@ -66,14 +66,30 @@ exports.addCustomer = async (req, res, next) => {
       description,
     };
 
-    const newBrand = await addCustomerData(objParams);
+    const newCustomerData = await addCustomerData(objParams);
 
-    const newBrandRaw = await getRawJson(newBrand);
+    const objCustomerBranch = {
+      branchName: companyName,
+      branchAddress: address,
+      location,
+      contactPersonName: customerName,
+      contactPersonDesignation: "Manager",
+      contactPersonMobileNumber: contactNumber,
+      customerId: newCustomerData.id,
+    };
+
+    const customerbranchData = await addCustomerBranchData(objCustomerBranch);
+
+    await setDefaultCustomerBranchData(
+      newCustomerData.id,
+      customerbranchData.id
+    );
+
     sendJsonResponse(
       req,
       res,
       200,
-      newBrandRaw,
+      newCustomerData,
       true,
       "Customer added successfully"
     );

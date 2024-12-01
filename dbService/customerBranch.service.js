@@ -53,6 +53,7 @@ exports.getCustomerData = async (objParams) => {
           status = "",
           description = "",
           phone = "",
+          search = "",
         } = {},
       } = { pagination: {}, filter: {} },
       customerId,
@@ -68,35 +69,48 @@ exports.getCustomerData = async (objParams) => {
       customerDataWhere.status = status;
     }
 
-    if (!_.isEmpty(name)) {
-      customerDataWhere.name = {
-        [Op.like]: `%${name}%`,
+    if (!_.isEmpty(search)) {
+      customerDataWhere = {
+        [Op.or]: [
+          { companyName: { [Op.like]: `%${search}%` } },
+          { customerName: { [Op.like]: `%${search}%` } },
+          { website: { [Op.like]: `%${search}%` } },
+          { address: { [Op.like]: `%${search}%` } },
+          { phone: { [Op.like]: `%${search}%` } },
+          { description: { [Op.like]: `%${search}%` } },
+        ],
       };
     }
 
-    if (!_.isEmpty(website)) {
-      customerDataWhere.website = {
-        [Op.like]: `%${website}%`,
-      };
-    }
+    // if (!_.isEmpty(name)) {
+    //   customerDataWhere.name = {
+    //     [Op.like]: `%${name}%`,
+    //   };
+    // }
 
-    if (!_.isEmpty(address)) {
-      customerDataWhere.address = {
-        [Op.like]: `%${address}%`,
-      };
-    }
+    // if (!_.isEmpty(website)) {
+    //   customerDataWhere.website = {
+    //     [Op.like]: `%${website}%`,
+    //   };
+    // }
 
-    if (!_.isEmpty(description)) {
-      customerDataWhere.description = {
-        [Op.like]: `%${description}%`,
-      };
-    }
+    // if (!_.isEmpty(address)) {
+    //   customerDataWhere.address = {
+    //     [Op.like]: `%${address}%`,
+    //   };
+    // }
 
-    if (!_.isEmpty(phone)) {
-      customerDataWhere.phone = {
-        [Op.like]: `%${phone}%`,
-      };
-    }
+    // if (!_.isEmpty(description)) {
+    //   customerDataWhere.description = {
+    //     [Op.like]: `%${description}%`,
+    //   };
+    // }
+
+    // if (!_.isEmpty(phone)) {
+    //   customerDataWhere.phone = {
+    //     [Op.like]: `%${phone}%`,
+    //   };
+    // }
 
     let sorterField = "id";
     let sorterOrder = "ASC";
