@@ -20,17 +20,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      contactPersonName: {
+      contactName: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      contactPersonDesignation: {
+      contactPosition: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
-      contactPersonMobileNumber: {
+      contactNumber: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+      },
+      contactAlternateNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       email: {
         type: DataTypes.STRING,
@@ -67,6 +71,13 @@ module.exports = (sequelize, DataTypes) => {
     Department.belongsTo(models.Branch, {
       foreignKey: "branchId",
       as: "branch",
+    });
+
+    Department.hasMany(models.ContactPerson, {
+      foreignKey: "referenceId",
+      constraints: false,
+      scope: { referenceType: "department" },
+      as: "contactPersonDetails",
     });
   };
 

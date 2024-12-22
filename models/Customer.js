@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      position: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       website: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -25,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       phone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      alternateContactNumber: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -72,7 +80,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Customer.associate = (models) => {
-    Customer.hasMany(models.Branch, { foreignKey: "customerId" });
+    Customer.hasMany(models.Branch, {
+      foreignKey: "customerId",
+      as: "branches",
+    });
 
     Customer.hasMany(models.Leads, {
       foreignKey: "customerId",

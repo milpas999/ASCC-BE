@@ -20,6 +20,11 @@ const {
   getDepartmentById,
   updateDepartment,
   deleteDepartment,
+  addContactPerson,
+  getContactPerson,
+  getContactPersonById,
+  updateContactPerson,
+  deleteContactPerson,
 } = require("../../controller/customerBranch.controller");
 
 // customer API
@@ -29,6 +34,17 @@ router.get("/:customerId", getCustomerById);
 router.delete("/:customerId", deleteCustomerById);
 router.put("/:customerId", updateCustomer);
 router.patch("/change-status/:customerId/:status", updateCustomerStatus);
+
+// Contact person API
+router.post("/contactPerson", addContactPerson);
+router.get("/contactPerson/:referenceType/:referenceId", getContactPerson);
+router.get("/contactPerson/:contactPersonId", getContactPersonById);
+router.put("/contactPerson/:contactPersonId", updateContactPerson);
+router.delete("/contactPerson/:contactPersonId", deleteContactPerson);
+// router.patch(
+//   "/contactPerson/set-default/:contactPersonId",
+//   setDefaultCustomerBranch
+// );
 
 // branch API
 router.post("/:customerId/branch", addCustomerBranchData);

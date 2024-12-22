@@ -1,9 +1,15 @@
 const _ = require("lodash");
 
-const { Customer, Branch, Department } = require("../models");
+const {
+  Customer,
+  Branch,
+  Department,
+  ContactPersonBranchMapping,
+  ContactPerson,
+} = require("../models");
 const { getCurrentDateTime } = require("../config/helper/date-utils");
 const { deleteOperation } = require("../config/helper/db-utility");
-const { Op } = require("sequelize");
+const { Op, where, Model } = require("sequelize");
 const { getRawJson } = require("../config/helper/utility");
 
 exports.addCustomerData = async (objParams) => {
@@ -12,9 +18,10 @@ exports.addCustomerData = async (objParams) => {
       companyName,
       customerName,
       contactNumber,
+      alternateNumber,
+      contactPosition,
       website,
       address,
-      phone,
       location,
       dob,
       anniversaryDate,
@@ -25,6 +32,8 @@ exports.addCustomerData = async (objParams) => {
       companyName,
       customerName,
       phone: contactNumber,
+      alternateContactNumber: alternateNumber,
+      position: contactPosition,
       website,
       address,
       location,
@@ -127,6 +136,44 @@ exports.getCustomerData = async (objParams) => {
         ...customerDataWhere,
         ...deleteOperation(),
       },
+      include: [
+        {
+          model: Branch,
+          as: "branches",
+          where: {
+            ...deleteOperation(),
+          },
+          required: false,
+          include: [
+            {
+              model: Department,
+              as: "departments",
+              where: {
+                ...deleteOperation(),
+              },
+              required: false,
+              include: [
+                {
+                  model: ContactPerson,
+                  as: "contactPersonDetails",
+                  where: {
+                    ...deleteOperation(),
+                  },
+                  required: false,
+                },
+              ],
+            },
+            {
+              model: ContactPerson,
+              as: "contactPersonDetails",
+              where: {
+                ...deleteOperation(),
+              },
+              required: false,
+            },
+          ],
+        },
+      ],
       limit: _.toInteger(pageSize),
       offset: _.toInteger(offset),
       order: [[sorterField, sorterOrder]],
@@ -232,20 +279,22 @@ exports.addCustomerBranchData = async (objParams) => {
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
+      contactPersonAlterNateNumber,
       customerId,
     } = objParams;
 
-    const customerData = await Branch.create({
+    const branchData = await Branch.create({
       branchName,
       branchAddress,
       location,
-      contactPersonName,
-      contactPersonDesignation,
-      contactPersonMobileNumber,
+      contactName: contactPersonName,
+      contactPosition: contactPersonDesignation,
+      contactNumber: contactPersonMobileNumber,
+      contactAlternateNumber: contactPersonAlterNateNumber,
       customerId,
     });
 
-    return customerData;
+    return branchData;
   } catch (error) {
     console.log("error :: ", error);
     throw error;
@@ -310,6 +359,7 @@ exports.updateCustomerBranchData = async (objParams) => {
  */
 exports.getCustomerBranchData = async (objParams) => {
   try {
+    console.log("objParams ::::::: ", objParams);
     const {
       filterParams: {
         pagination: { current = 1, pageSize = 10 } = {},
@@ -381,6 +431,34 @@ exports.getCustomerBranchData = async (objParams) => {
         ...customerBranchDataWhere,
         ...deleteOperation(),
       },
+      include: [
+        {
+          model: ContactPerson,
+          as: "contactPersonDetails",
+          where: { ...{ referenceType: "branch" }, ...deleteOperation() },
+        },
+      ],
+      // include: [
+      //   {
+      //     model: ContactPersonBranchMapping, // Specify the model to join with
+      //     // attributes: ["id", "title", "content"], // Select specific fields from the Post model
+      //     as: "contactPerson",
+      //     where: {
+      //       ...deleteOperation(),
+      //     },
+      //     // required: true,
+      //     include: [
+      //       {
+      //         model: ContactPerson,
+      //         as: "contactPersonDetails",
+      //         where: {
+      //           ...deleteOperation(),
+      //         },
+      //         // required: true,
+      //       },
+      //     ],
+      //   },
+      // ],
       limit: _.toInteger(pageSize),
       offset: _.toInteger(offset),
       order: [[sorterField, sorterOrder]],
@@ -469,10 +547,10 @@ exports.addCustomerBranchDepartmentData = async (objParams) => {
 
     const departmentData = await Department.create({
       departmentName,
-      contactPersonName,
-      contactPersonDesignation,
-      contactPersonMobileNumber,
-      alternateContactNumber,
+      contactName: contactPersonName,
+      contactPosition: contactPersonDesignation,
+      contactNumber: contactPersonMobileNumber,
+      contactAlternateNumber: alternateContactNumber,
       email,
       description,
       customerId,
@@ -588,10 +666,10 @@ exports.updateDepartmentData = async (objParams) => {
     const departmentData = await Department.update(
       {
         departmentName,
-        contactPersonName,
-        contactPersonDesignation,
-        contactPersonMobileNumber,
-        alternateContactNumber,
+        contactName: contactPersonName,
+        contactPosition: contactPersonDesignation,
+        contactNumber: contactPersonMobileNumber,
+        contactAlternateNumber: alternateContactNumber,
         email,
         description,
       },

@@ -20,6 +20,15 @@ const {
   deleteDepartmentData,
 } = require("../dbService/customerBranch.service");
 const { body } = require("express-validator");
+const {
+  addContactPerson,
+  addContactPersonWithCustomer,
+  addContactPersonWithBranch,
+  addContactPersonData,
+  getContactPersonData,
+  updateContactPersonData,
+  deleteContactPersonData,
+} = require("../dbService/contactPerson.service");
 
 /**
  * Adds a new customer to the system.
@@ -43,9 +52,10 @@ exports.addCustomer = async (req, res, next) => {
         companyName,
         customerName,
         contactNumber,
+        alternateNumber,
+        contactPosition,
         website,
         address,
-        phone,
         location,
         dob,
         anniversaryDate,
@@ -57,9 +67,10 @@ exports.addCustomer = async (req, res, next) => {
       companyName,
       customerName,
       contactNumber,
+      alternateNumber,
+      contactPosition,
       website,
       address,
-      phone,
       location,
       dob,
       anniversaryDate,
@@ -73,8 +84,10 @@ exports.addCustomer = async (req, res, next) => {
       branchAddress: address,
       location,
       contactPersonName: customerName,
-      contactPersonDesignation: "Manager",
+      contactPersonDesignation: contactPosition,
       contactPersonMobileNumber: contactNumber,
+      contactPersonAlterNateNumber: alternateNumber,
+      contactPosition: contactPosition,
       customerId: newCustomerData.id,
     };
 
@@ -329,6 +342,7 @@ exports.addCustomerBranchData = async (req, res, next) => {
         contactPersonName,
         contactPersonDesignation,
         contactPersonMobileNumber,
+        contactPersonAlternateNumber,
       },
       params: { customerId },
     } = req;
@@ -340,6 +354,7 @@ exports.addCustomerBranchData = async (req, res, next) => {
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
+      contactPersonAlterNateNumber: contactPersonAlternateNumber,
       customerId,
     };
 
@@ -714,6 +729,182 @@ exports.deleteDepartment = async (req, res, next) => {
       {},
       true,
       "Department deleted successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.addContactPerson = async (req, res, next) => {
+  try {
+    const {
+      body: {
+        contactPersonName,
+        contactPersonPosition,
+        contactPersonNumber,
+        contactPersonAlternateNumber,
+        referenceType,
+        referenceId,
+      },
+    } = req;
+
+    const objContactPersonData = {
+      contactPersonName,
+      contactPersonPosition,
+      contactPersonNumber,
+      contactPersonAlternateNumber,
+      referenceType,
+      referenceId,
+    };
+
+    await addContactPersonData(objContactPersonData);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {},
+      true,
+      "Contact person added successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.getContactPerson = async (req, res, next) => {
+  try {
+    const {
+      params: { referenceType, referenceId },
+    } = req;
+    const contactPersonData = await getContactPersonData({
+      referenceType,
+      referenceId,
+    });
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      contactPersonData,
+      true,
+      "Contact person fetched successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.getContactPersonById = async (req, res, next) => {
+  try {
+    const {
+      params: { contactPersonId },
+    } = req;
+    const contactPersonData = await getContactPersonData({
+      contactPersonId,
+    });
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      contactPersonData,
+      true,
+      "Contact person fetched successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.updateContactPerson = async (req, res, next) => {
+  try {
+    const {
+      body: {
+        contactPersonName,
+        contactPersonPosition,
+        contactPersonNumber,
+        contactPersonAlternateNumber,
+        referenceType,
+        referenceId,
+      },
+      params: { contactPersonId },
+    } = req;
+
+    const objContactPersonData = {
+      contactPersonName,
+      contactPersonPosition,
+      contactPersonNumber,
+      contactPersonAlternateNumber,
+      referenceType,
+      referenceId,
+      contactPersonId,
+    };
+
+    await updateContactPersonData(objContactPersonData);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {},
+      true,
+      "Contact person updated successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.deleteContactPerson = async (req, res, next) => {
+  try {
+    const {
+      params: { contactPersonId },
+    } = req;
+    await deleteContactPersonData(contactPersonId);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {},
+      true,
+      "Contact person deleted successfully"
     );
   } catch (error) {
     console.log("error :: ", error);
