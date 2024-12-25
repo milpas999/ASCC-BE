@@ -17,27 +17,27 @@ module.exports = (sequelize, DataTypes) => {
       },
       branchAddress: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       location: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactPosition: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactAlternateNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       flagDefault: {
         type: DataTypes.ENUM,

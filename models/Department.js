@@ -22,19 +22,19 @@ module.exports = (sequelize, DataTypes) => {
       },
       contactName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactPosition: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       contactAlternateNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       email: {
         type: DataTypes.STRING,

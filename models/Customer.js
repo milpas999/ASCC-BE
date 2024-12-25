@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       position: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       website: {
         type: DataTypes.STRING,
@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       phone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      email: {
         type: DataTypes.STRING,
         allowNull: true,
       },

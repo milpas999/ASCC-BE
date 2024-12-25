@@ -20,6 +20,7 @@ exports.addCustomerData = async (objParams) => {
       contactNumber,
       alternateNumber,
       contactPosition,
+      email,
       website,
       address,
       location,
@@ -32,6 +33,7 @@ exports.addCustomerData = async (objParams) => {
       companyName,
       customerName,
       phone: contactNumber,
+      email,
       alternateContactNumber: alternateNumber,
       position: contactPosition,
       website,
@@ -78,6 +80,8 @@ exports.getCustomerData = async (objParams) => {
       customerDataWhere.status = status;
     }
 
+    let branchWhereParams = {};
+
     if (!_.isEmpty(search)) {
       customerDataWhere = {
         [Op.or]: [
@@ -87,39 +91,18 @@ exports.getCustomerData = async (objParams) => {
           { address: { [Op.like]: `%${search}%` } },
           { phone: { [Op.like]: `%${search}%` } },
           { description: { [Op.like]: `%${search}%` } },
+          // { "$branches.branchName$": { [Op.like]: `%${search}%` } },
+        ],
+      };
+
+      branchWhereParams = {
+        [Op.or]: [
+          { branchName: { [Op.like]: `%${search}%` } },
+          { branchAddress: { [Op.like]: `%${search}%` } },
+          { location: { [Op.like]: `%${search}%` } },
         ],
       };
     }
-
-    // if (!_.isEmpty(name)) {
-    //   customerDataWhere.name = {
-    //     [Op.like]: `%${name}%`,
-    //   };
-    // }
-
-    // if (!_.isEmpty(website)) {
-    //   customerDataWhere.website = {
-    //     [Op.like]: `%${website}%`,
-    //   };
-    // }
-
-    // if (!_.isEmpty(address)) {
-    //   customerDataWhere.address = {
-    //     [Op.like]: `%${address}%`,
-    //   };
-    // }
-
-    // if (!_.isEmpty(description)) {
-    //   customerDataWhere.description = {
-    //     [Op.like]: `%${description}%`,
-    //   };
-    // }
-
-    // if (!_.isEmpty(phone)) {
-    //   customerDataWhere.phone = {
-    //     [Op.like]: `%${phone}%`,
-    //   };
-    // }
 
     let sorterField = "id";
     let sorterOrder = "ASC";
@@ -141,6 +124,7 @@ exports.getCustomerData = async (objParams) => {
           model: Branch,
           as: "branches",
           where: {
+            // ...branchWhereParams,
             ...deleteOperation(),
           },
           required: false,
@@ -220,6 +204,7 @@ exports.updateCustomerData = async (objParams) => {
       website,
       address,
       phone,
+      email,
       location,
       dob,
       anniversaryDate,
@@ -232,6 +217,7 @@ exports.updateCustomerData = async (objParams) => {
         customerName,
         phone: contactNumber,
         website,
+        email,
         address,
         location,
         dob,

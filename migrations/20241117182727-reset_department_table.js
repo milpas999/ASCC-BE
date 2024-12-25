@@ -11,38 +11,46 @@ module.exports = {
      */
 
     await queryInterface.sequelize.transaction(async (t) => {
-      await queryInterface.removeColumn("Department", "name", {
-        transaction: t,
-      });
+      // await queryInterface.removeColumn("Department", "name", {
+      //   transaction: t,
+      // });
 
-      await queryInterface.removeColumn("Department", "contactPerson", {
-        transaction: t,
-      });
-      await queryInterface.removeColumn("Department", "contactPersonPosition", {
-        transaction: t,
-      });
-      await queryInterface.removeColumn("Department", "contactPersonNumber", {
-        transaction: t,
-      });
+      // await queryInterface.removeColumn("Department", "contactPersonName", {
+      //   transaction: t,
+      // });
+      // await queryInterface.removeColumn(
+      //   "Department",
+      //   "contactPersonDesignation",
+      //   {
+      //     transaction: t,
+      //   }
+      // );
+      // await queryInterface.removeColumn(
+      //   "Department",
+      //   "contactPersonMobileNumber",
+      //   {
+      //     transaction: t,
+      //   }
+      // );
 
-      await queryInterface.removeColumn(
-        "Department",
-        "alternateContactNumber",
-        {
-          transaction: t,
-        }
-      );
+      // await queryInterface.removeColumn(
+      //   "Department",
+      //   "alternateContactNumber",
+      //   {
+      //     transaction: t,
+      //   }
+      // );
 
-      await queryInterface.addColumn(
-        "Department",
-        "departmentName",
-        {
-          type: Sequelize.STRING,
-          allowNull: true,
-          after: "branchId",
-        },
-        { transaction: t }
-      );
+      // await queryInterface.addColumn(
+      //   "Department",
+      //   "departmentName",
+      //   {
+      //     type: Sequelize.STRING,
+      //     allowNull: true,
+      //     after: "branchId",
+      //   },
+      //   { transaction: t }
+      // );
 
       await queryInterface.addColumn(
         "Department",
