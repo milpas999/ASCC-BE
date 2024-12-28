@@ -867,6 +867,13 @@ exports.searchFromBranch = async (searchParam) => {
         ],
         ...deleteOperation(),
       },
+      include: [
+        {
+          model: Customer,
+          as: "customer",
+          attributes: ["id", "companyName", "customerName"],
+        },
+      ],
     });
 
     // Convert Sequelize instances to plain JavaScript objects
@@ -892,6 +899,19 @@ exports.searchFromDepartment = async (searchParam) => {
         ],
         ...deleteOperation(),
       },
+      include: [
+        {
+          model: Branch,
+          as: "branch",
+          include: [
+            {
+              model: Customer,
+              as: "customer",
+              attributes: ["id", "companyName", "customerName"],
+            },
+          ],
+        },
+      ],
     });
 
     // Convert Sequelize instances to plain JavaScript objects

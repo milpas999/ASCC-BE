@@ -5,6 +5,7 @@ const {
   ContactPersonBranchMapping,
   Branch,
   Department,
+  Customer,
 } = require("../models");
 
 const { deleteOperation } = require("../config/helper/db-utility");
@@ -207,6 +208,13 @@ exports.searchFromContactPerson = async (searchParam) => {
           where: {
             "$ContactPerson.referenceType$": "branch",
           },
+          include: [
+            {
+              model: Customer,
+              as: "customer",
+              attributes: ["id", "companyName", "customerName"],
+            },
+          ],
         },
         {
           model: Department,
@@ -214,6 +222,13 @@ exports.searchFromContactPerson = async (searchParam) => {
           where: {
             "$ContactPerson.referenceType$": "department",
           },
+          include: [
+            {
+              model: Customer,
+              as: "customerDetails",
+              attributes: ["id", "companyName", "customerName"],
+            },
+          ],
         },
       ],
     });
