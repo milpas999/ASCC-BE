@@ -188,6 +188,77 @@ exports.deleteCustomerData = async (customerId) => {
       }
     );
 
+    await Branch.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          customerId,
+        },
+      }
+    );
+
+    const arrBranch = await Branch.findAll({
+      where: {
+        customerId,
+      },
+    });
+
+    const arrBranchTransformed = arrBranch.map((branch) => branch.toJSON());
+
+    arrBranchTransformed.map(async (objEachBranch) => {
+      const { id: branchId } = objEachBranch;
+
+      await ContactPerson.update(
+        {
+          endeffdt: currentDateTime,
+        },
+        {
+          where: {
+            referenceId: branchId,
+            referenceType: "branch",
+          },
+        }
+      );
+
+      await Department.update(
+        {
+          endeffdt: currentDateTime,
+        },
+        {
+          where: {
+            branchId,
+          },
+        }
+      );
+
+      const arrDepartment = await Department.findAll({
+        where: {
+          branchId: branchId,
+        },
+      });
+
+      const arrDepartmentTransformed = arrDepartment.map((department) =>
+        department.toJSON()
+      );
+
+      arrDepartmentTransformed.map(async (objEachDepartment) => {
+        const { id: departmentId } = objEachDepartment;
+        await ContactPerson.update(
+          {
+            endeffdt: currentDateTime,
+          },
+          {
+            where: {
+              referenceId: departmentId,
+              referenceType: "department",
+            },
+          }
+        );
+      });
+    });
+
     return true;
   } catch (error) {
     console.log("error :: ", error);
@@ -476,6 +547,54 @@ exports.deleteCustomerBranchData = async (customerId, branchId) => {
       }
     );
 
+    await ContactPerson.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          referenceId: branchId,
+          referenceType: "branch",
+        },
+      }
+    );
+
+    await Department.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          branchId,
+        },
+      }
+    );
+
+    const arrDepartment = await Department.findAll({
+      where: {
+        branchId: branchId,
+      },
+    });
+
+    const arrDepartmentTransformed = arrDepartment.map((department) =>
+      department.toJSON()
+    );
+
+    arrDepartmentTransformed.map(async (objEachDepartment) => {
+      const { id: departmentId } = objEachDepartment;
+      await ContactPerson.update(
+        {
+          endeffdt: currentDateTime,
+        },
+        {
+          where: {
+            referenceId: departmentId,
+            referenceType: "department",
+          },
+        }
+      );
+    });
+
     return true;
   } catch (error) {
     console.log("error :: ", error);
@@ -691,9 +810,96 @@ exports.deleteDepartmentData = async (customerId, branchId, departmentId) => {
       }
     );
 
+    await ContactPerson.update(
+      {
+        endeffdt: currentDateTime,
+      },
+      {
+        where: {
+          referenceId: departmentId,
+          referenceType: "department",
+        },
+      }
+    );
+
     return true;
   } catch (error) {
     console.log("error :: ", error);
     return error;
+  }
+};
+
+exports.searchFromCustomer = async (searchParam) => {
+  try {
+    const arrCustomerData = await Customer.findAll({
+      where: {
+        [Op.or]: [
+          { companyName: { [Op.like]: `%${searchParam}%` } },
+          { customerName: { [Op.like]: `%${searchParam}%` } },
+          { website: { [Op.like]: `%${searchParam}%` } },
+          { address: { [Op.like]: `%${searchParam}%` } },
+          { phone: { [Op.like]: `%${searchParam}%` } },
+          { description: { [Op.like]: `%${searchParam}%` } },
+        ],
+        ...deleteOperation(),
+      },
+    });
+
+    // Convert Sequelize instances to plain JavaScript objects
+    const customerData = arrCustomerData.map((customer) => customer.toJSON());
+    return customerData;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.searchFromBranch = async (searchParam) => {
+  try {
+    const arrBranchData = await Branch.findAll({
+      where: {
+        [Op.or]: [
+          { branchName: { [Op.like]: `%${searchParam}%` } },
+          { branchAddress: { [Op.like]: `%${searchParam}%` } },
+          { contactName: { [Op.like]: `%${searchParam}%` } },
+          { contactPosition: { [Op.like]: `%${searchParam}%` } },
+          { contactNumber: { [Op.like]: `%${searchParam}%` } },
+          { contactAlternateNumber: { [Op.like]: `%${searchParam}%` } },
+        ],
+        ...deleteOperation(),
+      },
+    });
+
+    // Convert Sequelize instances to plain JavaScript objects
+    const branchData = arrBranchData.map((branch) => branch.toJSON());
+    return branchData;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.searchFromDepartment = async (searchParam) => {
+  try {
+    const arrDepartmentData = await Department.findAll({
+      where: {
+        [Op.or]: [
+          { departmentName: { [Op.like]: `%${searchParam}%` } },
+          { contactName: { [Op.like]: `%${searchParam}%` } },
+          { contactPosition: { [Op.like]: `%${searchParam}%` } },
+          { contactNumber: { [Op.like]: `%${searchParam}%` } },
+          { contactAlternateNumber: { [Op.like]: `%${searchParam}%` } },
+          { email: { [Op.like]: `%${searchParam}%` } },
+          { description: { [Op.like]: `%${searchParam}%` } },
+        ],
+        ...deleteOperation(),
+      },
+    });
+
+    // Convert Sequelize instances to plain JavaScript objects
+    const departmentData = arrDepartmentData.map((department) =>
+      department.toJSON()
+    );
+    return departmentData;
+  } catch (error) {
+    throw error;
   }
 };

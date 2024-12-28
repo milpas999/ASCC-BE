@@ -1,9 +1,15 @@
 const _ = require("lodash");
 
-const { ContactPerson, ContactPersonBranchMapping } = require("../models");
+const {
+  ContactPerson,
+  ContactPersonBranchMapping,
+  Branch,
+  Department,
+} = require("../models");
 
 const { deleteOperation } = require("../config/helper/db-utility");
 const { getCurrentDateTime } = require("../config/helper/date-utils");
+const { Op } = require("sequelize");
 
 exports.addContactPerson = async (objParams) => {
   try {
@@ -179,5 +185,45 @@ exports.deleteContactPersonData = async (contactPersonId) => {
   } catch (error) {
     console.log("error :: ", error);
     return error;
+  }
+};
+
+exports.searchFromContactPerson = async (searchParam) => {
+  try {
+    const arrContactPersonData = await ContactPerson.findAll({
+      where: {
+        [Op.or]: [
+          { contactPersonName: { [Op.like]: `%${searchParam}%` } },
+          { contactPersonPosition: { [Op.like]: `%${searchParam}%` } },
+          { contactPersonNumber: { [Op.like]: `%${searchParam}%` } },
+          { contactPersonAlternateNumber: { [Op.like]: `%${searchParam}%` } },
+        ],
+        ...deleteOperation(),
+      },
+      include: [
+        {
+          model: Branch,
+          required: false, // Include Branch only if `referenceType` is "branch"
+          where: {
+            "$ContactPerson.referenceType$": "branch",
+          },
+        },
+        {
+          model: Department,
+          required: false, // Include Department only if `referenceType` is "department"
+          where: {
+            "$ContactPerson.referenceType$": "department",
+          },
+        },
+      ],
+    });
+
+    // Convert Sequelize instances to plain JavaScript objects
+    const contactPersonData = arrContactPersonData.map((contactPerson) =>
+      contactPerson.toJSON()
+    );
+    return contactPersonData;
+  } catch (error) {
+    throw error;
   }
 };

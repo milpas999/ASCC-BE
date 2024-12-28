@@ -18,6 +18,10 @@ const {
   getCustomerBranchDepartmentData,
   updateDepartmentData,
   deleteDepartmentData,
+  searchCustomerEntityData,
+  searchFromCustomer,
+  searchFromBranch,
+  searchFromDepartment,
 } = require("../dbService/customerBranch.service");
 const { body } = require("express-validator");
 const {
@@ -28,6 +32,7 @@ const {
   getContactPersonData,
   updateContactPersonData,
   deleteContactPersonData,
+  searchFromContactPerson,
 } = require("../dbService/contactPerson.service");
 
 /**
@@ -909,6 +914,51 @@ exports.deleteContactPerson = async (req, res, next) => {
       {},
       true,
       "Contact person deleted successfully"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.searchCustomerEntity = async (req, res, next) => {
+  try {
+    const {
+      params: { searchParam },
+    } = req;
+
+    const promise1 = searchFromCustomer(searchParam);
+    const promise2 = searchFromBranch(searchParam);
+    const promise3 = searchFromDepartment(searchParam);
+    const promise4 = searchFromContactPerson(searchParam);
+
+    const searchData = await Promise.all([
+      promise1,
+      promise2,
+      promise3,
+      promise4,
+    ]);
+
+    console.log("searchData ::::::::::: ", searchData);
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {
+        arrCustomerData: searchData[0],
+        arrBranchData: searchData[1],
+        arrDepartmentData: searchData[2],
+        arrContactPersonData: searchData[3],
+      },
+      true,
+      "Customer search data"
     );
   } catch (error) {
     console.log("error :: ", error);

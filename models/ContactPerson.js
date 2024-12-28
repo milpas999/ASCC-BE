@@ -61,13 +61,13 @@ module.exports = (sequelize, DataTypes) => {
     ContactPerson.belongsTo(models.Branch, {
       foreignKey: "referenceId",
       constraints: false,
-      scope: { referenceType: "branch" }, // Discriminator for Post
+      // scope: { referenceType: "branch" }, // Discriminator for Post
     });
 
     ContactPerson.belongsTo(models.Department, {
       foreignKey: "referenceId",
       constraints: false,
-      scope: { referenceType: "department" }, // Discriminator for Post
+      // scope: { referenceType: "department" }, // Discriminator for Post
     });
   };
 
