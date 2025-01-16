@@ -72,7 +72,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Branch.associate = (models) => {
-    Branch.belongsTo(models.Customer, { foreignKey: "customerId" });
+    Branch.belongsTo(models.Customer, {
+      foreignKey: "customerId",
+      as: "customer",
+    });
 
     Branch.hasMany(models.Department, {
       foreignKey: "branchId",

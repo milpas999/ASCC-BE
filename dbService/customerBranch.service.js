@@ -11,6 +11,7 @@ const { getCurrentDateTime } = require("../config/helper/date-utils");
 const { deleteOperation } = require("../config/helper/db-utility");
 const { Op, where, Model } = require("sequelize");
 const { getRawJson } = require("../config/helper/utility");
+const moment = require("moment-timezone");
 
 exports.addCustomerData = async (objParams) => {
   try {
@@ -26,6 +27,8 @@ exports.addCustomerData = async (objParams) => {
       location,
       dob,
       anniversaryDate,
+      preferredStartTime,
+      preferredEndTime,
       description,
     } = objParams;
 
@@ -41,6 +44,12 @@ exports.addCustomerData = async (objParams) => {
       location,
       dob,
       anniversaryDate,
+      preferredStartTime: !_.isEmpty(preferredStartTime)
+        ? moment(preferredStartTime).format("HH:mm")
+        : null,
+      preferredEndTime: !_.isEmpty(preferredEndTime)
+        ? moment(preferredEndTime).format("HH:mm")
+        : null,
       description,
     });
 
@@ -279,6 +288,8 @@ exports.updateCustomerData = async (objParams) => {
       location,
       dob,
       anniversaryDate,
+      preferredStartTime,
+      preferredEndTime,
       description,
       customerId,
     } = objParams;
@@ -293,6 +304,12 @@ exports.updateCustomerData = async (objParams) => {
         location,
         dob,
         anniversaryDate,
+        preferredStartTime: !_.isEmpty(preferredStartTime)
+          ? moment(preferredStartTime).format("HH:mm")
+          : null,
+        preferredEndTime: !_.isEmpty(preferredEndTime)
+          ? moment(preferredEndTime).format("HH:mm")
+          : null,
         description,
       },
       {

@@ -56,6 +56,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      preferredStartTime: {
+        allowNull: true,
+        type: DataTypes.TIME,
+      },
+      preferredEndTime: {
+        allowNull: true,
+        type: DataTypes.TIME,
+      },
       status: {
         type: DataTypes.ENUM,
         values: ["A", "I"],

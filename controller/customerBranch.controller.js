@@ -65,6 +65,8 @@ exports.addCustomer = async (req, res, next) => {
         location,
         dob,
         anniversaryDate,
+        preferredStartTime,
+        preferredEndTime,
         description,
       },
     } = req;
@@ -81,6 +83,8 @@ exports.addCustomer = async (req, res, next) => {
       location,
       dob,
       anniversaryDate,
+      preferredStartTime,
+      preferredEndTime,
       description,
     };
 
@@ -262,6 +266,8 @@ exports.updateCustomer = async (req, res, next) => {
         location,
         dob,
         anniversaryDate,
+        preferredStartTime,
+        preferredEndTime,
         description,
       },
     } = req;
@@ -277,6 +283,8 @@ exports.updateCustomer = async (req, res, next) => {
       location,
       dob,
       anniversaryDate,
+      preferredStartTime,
+      preferredEndTime,
       description,
       customerId,
     };
