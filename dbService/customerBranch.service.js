@@ -7,7 +7,10 @@ const {
   ContactPersonBranchMapping,
   ContactPerson,
 } = require("../models");
-const { getCurrentDateTime } = require("../config/helper/date-utils");
+const {
+  getCurrentDateTime,
+  getFormattedTime,
+} = require("../config/helper/date-utils");
 const { deleteOperation } = require("../config/helper/db-utility");
 const { Op, where, Model } = require("sequelize");
 const { getRawJson } = require("../config/helper/utility");
@@ -45,10 +48,10 @@ exports.addCustomerData = async (objParams) => {
       dob,
       anniversaryDate,
       preferredStartTime: !_.isEmpty(preferredStartTime)
-        ? moment(preferredStartTime).format("HH:mm")
+        ? getFormattedTime(preferredStartTime)
         : null,
       preferredEndTime: !_.isEmpty(preferredEndTime)
-        ? moment(preferredEndTime).format("HH:mm")
+        ? getFormattedTime(preferredEndTime)
         : null,
       description,
     });
@@ -305,10 +308,10 @@ exports.updateCustomerData = async (objParams) => {
         dob,
         anniversaryDate,
         preferredStartTime: !_.isEmpty(preferredStartTime)
-          ? moment(preferredStartTime).format("HH:mm")
+          ? getFormattedTime(preferredStartTime)
           : null,
         preferredEndTime: !_.isEmpty(preferredEndTime)
-          ? moment(preferredEndTime).format("HH:mm")
+          ? getFormattedTime(preferredEndTime)
           : null,
         description,
       },
