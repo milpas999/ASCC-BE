@@ -48,11 +48,9 @@ exports.addCustomerData = async (objParams) => {
       dob,
       anniversaryDate,
       preferredStartTime: !_.isEmpty(preferredStartTime)
-        ? getFormattedTime(preferredStartTime)
+        ? preferredStartTime
         : null,
-      preferredEndTime: !_.isEmpty(preferredEndTime)
-        ? getFormattedTime(preferredEndTime)
-        : null,
+      preferredEndTime: !_.isEmpty(preferredEndTime) ? preferredEndTime : null,
       description,
     });
 
@@ -308,10 +306,10 @@ exports.updateCustomerData = async (objParams) => {
         dob,
         anniversaryDate,
         preferredStartTime: !_.isEmpty(preferredStartTime)
-          ? getFormattedTime(preferredStartTime)
+          ? preferredStartTime
           : null,
         preferredEndTime: !_.isEmpty(preferredEndTime)
-          ? getFormattedTime(preferredEndTime)
+          ? preferredEndTime
           : null,
         description,
       },
@@ -353,6 +351,7 @@ exports.addCustomerBranchData = async (objParams) => {
       branchName,
       branchAddress,
       location,
+      area,
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
@@ -364,6 +363,7 @@ exports.addCustomerBranchData = async (objParams) => {
       branchName,
       branchAddress,
       location,
+      area,
       contactName: contactPersonName,
       contactPosition: contactPersonDesignation,
       contactNumber: contactPersonMobileNumber,
@@ -384,6 +384,7 @@ exports.updateCustomerBranchData = async (objParams) => {
       branchName,
       branchAddress,
       location,
+      area,
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
@@ -396,6 +397,7 @@ exports.updateCustomerBranchData = async (objParams) => {
         branchName,
         branchAddress,
         location,
+        area,
         contactPersonName,
         contactPersonDesignation,
         contactPersonMobileNumber,
@@ -513,6 +515,7 @@ exports.getCustomerBranchData = async (objParams) => {
           model: ContactPerson,
           as: "contactPersonDetails",
           where: { ...{ referenceType: "branch" }, ...deleteOperation() },
+          required: false,
         },
       ],
       // include: [
@@ -757,6 +760,14 @@ exports.getCustomerBranchDepartmentData = async (objParams) => {
         ...customerBranchDepartmentDataWhere,
         ...deleteOperation(),
       },
+      include: [
+        {
+          model: ContactPerson,
+          as: "contactPersonDetails",
+          where: { ...{ referenceType: "department" }, ...deleteOperation() },
+          required: false,
+        },
+      ],
       limit: _.toInteger(pageSize),
       offset: _.toInteger(offset),
       order: [[sorterField, sorterOrder]],
@@ -891,7 +902,13 @@ exports.searchFromBranch = async (searchParam) => {
         {
           model: Customer,
           as: "customer",
-          attributes: ["id", "companyName", "customerName"],
+          attributes: [
+            "id",
+            "companyName",
+            "customerName",
+            "preferredStartTime",
+            "preferredEndTime",
+          ],
         },
       ],
     });
@@ -927,7 +944,13 @@ exports.searchFromDepartment = async (searchParam) => {
             {
               model: Customer,
               as: "customer",
-              attributes: ["id", "companyName", "customerName"],
+              attributes: [
+                "id",
+                "companyName",
+                "customerName",
+                "preferredStartTime",
+                "preferredEndTime",
+              ],
             },
           ],
         },

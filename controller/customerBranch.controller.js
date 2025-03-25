@@ -356,6 +356,7 @@ exports.addCustomerBranchData = async (req, res, next) => {
         branchName,
         branchAddress,
         location,
+        area,
         contactPersonName,
         contactPersonDesignation,
         contactPersonMobileNumber,
@@ -368,6 +369,7 @@ exports.addCustomerBranchData = async (req, res, next) => {
       branchName,
       branchAddress,
       location,
+      area,
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
@@ -468,6 +470,7 @@ exports.updateCustomerBranch = async (req, res, next) => {
         branchName,
         branchAddress,
         location,
+        area,
         contactPersonName,
         contactPersonDesignation,
         contactPersonMobileNumber,
@@ -479,6 +482,7 @@ exports.updateCustomerBranch = async (req, res, next) => {
       branchName,
       branchAddress,
       location,
+      area,
       contactPersonName,
       contactPersonDesignation,
       contactPersonMobileNumber,
@@ -964,6 +968,113 @@ exports.searchCustomerEntity = async (req, res, next) => {
         arrBranchData: searchData[1],
         arrDepartmentData: searchData[2],
         arrContactPersonData: searchData[3],
+      },
+      true,
+      "Customer search data"
+    );
+  } catch (error) {
+    console.log("error :: ", error);
+    sendJsonResponse(
+      req,
+      res,
+      error.statusCode || 500,
+      {},
+      false,
+      error.message
+    );
+  }
+};
+
+exports.getCustomerAllContactPersons = async (req, res, next) => {
+  try {
+    const {
+      params: { customerId },
+    } = req;
+
+    /**
+     * Search contact person from customer branch
+     */
+    const arrBranches = await getCustomerBranchData({
+      customerId,
+      filterParams: { pagination: { current: 1, pageSize: 1000 } },
+    });
+    // const arrBracnhId = arrBranches.data.map((objEachBranch) => {
+    //   // console.log("objEachBranch ::::::::::: ", objEachBranch);
+
+    //   const {
+    //     id,
+    //     customerId,
+    //     branchName,
+    //     branchAddress,
+    //     location,
+    //     contactName,
+    //     contactPosition,
+    //     contactNumber,
+    //     contactAlternateNumber,
+    //     flagDefault,
+    //     status,
+    //     createdAt,
+    //     updatedAt,
+    //     endeffdt,
+    //     contactPersonDetails,
+    //   } = objEachBranch;
+
+    //   console.log(
+    //     "contactPersonDetails ::::::::::::::: ",
+    //     contactPersonDetails
+    //   );
+
+    //   return id;
+    // });
+
+    // const promise1 = getContactPersonData({
+    //   referenceId: arrBracnhId,
+    //   referenceType: "branch",
+    //   filterParams: { pagination: { current: 1, pageSize: 1000 } },
+    // });
+
+    /**
+     * Search contact person from customer department
+     */
+    const arrDepartments = await getCustomerBranchDepartmentData({
+      customerId,
+      filterParams: { pagination: { current: 1, pageSize: 1000 } },
+    });
+    const arrDepartmentId = arrDepartments.data.map(
+      (objEachDepartment) => objEachDepartment.id
+    );
+    // const promise2 = getContactPersonData({
+    //   referenceId: arrDepartmentId,
+    //   referenceType: "department",
+    //   filterParams: { pagination: { current: 1, pageSize: 1000 } },
+    // });
+
+    // // const promise2 = searchFromBranch(searchParam);
+    // // const promise3 = searchFromDepartment(searchParam);
+    // // const promise4 = searchFromContactPerson(searchParam);
+
+    // const searchData = await Promise.all([promise1, promise2]);
+
+    // console.log("searchData ::::::::::: ", searchData);
+    // sendJsonResponse(
+    //   req,
+    //   res,
+    //   200,
+    //   {
+    //     arrContactPersonBranchData: searchData[0],
+    //     arrContactPersonDepartmentData: searchData[1],
+    //   },
+    //   true,
+    //   "Customer search data"
+    // );
+
+    sendJsonResponse(
+      req,
+      res,
+      200,
+      {
+        arrBranches,
+        arrDepartments,
       },
       true,
       "Customer search data"

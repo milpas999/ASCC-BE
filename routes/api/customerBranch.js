@@ -26,6 +26,7 @@ const {
   updateContactPerson,
   deleteContactPerson,
   searchCustomerEntity,
+  getCustomerAllContactPersons,
 } = require("../../controller/customerBranch.controller");
 
 // customer API
@@ -33,6 +34,10 @@ router.post("/", addCustomer);
 router.get("/", getCustomer);
 router.get("/searchCustomerEntity/:searchParam", searchCustomerEntity);
 router.get("/:customerId", getCustomerById);
+router.get(
+  "/searchCustomerContactPerson/:customerId",
+  getCustomerAllContactPersons
+);
 router.delete("/:customerId", deleteCustomerById);
 router.put("/:customerId", updateCustomer);
 router.patch("/change-status/:customerId/:status", updateCustomerStatus);

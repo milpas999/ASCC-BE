@@ -111,10 +111,6 @@ exports.updateContactPersonData = async (objParams) => {
 
 exports.getContactPersonData = async (objParams) => {
   try {
-    // const { referenceType, referenceId, contactPersonId } = objParams;
-
-    console.log("objParams ::::::::::::: ", objParams);
-
     const {
       filterParams: {
         pagination: { current = 1, pageSize = 10 } = {},
@@ -137,7 +133,9 @@ exports.getContactPersonData = async (objParams) => {
     }
 
     if (!_.isEmpty(referenceId)) {
-      contactPersonWhere.referenceId = referenceId;
+      contactPersonWhere.referenceId = {
+        [Op.in]: referenceId,
+      };
     }
 
     let sorterField = "id";
@@ -212,7 +210,13 @@ exports.searchFromContactPerson = async (searchParam) => {
             {
               model: Customer,
               as: "customer",
-              attributes: ["id", "companyName", "customerName"],
+              attributes: [
+                "id",
+                "companyName",
+                "customerName",
+                "preferredStartTime",
+                "preferredEndTime",
+              ],
             },
           ],
         },
@@ -226,7 +230,13 @@ exports.searchFromContactPerson = async (searchParam) => {
             {
               model: Customer,
               as: "customerDetails",
-              attributes: ["id", "companyName", "customerName"],
+              attributes: [
+                "id",
+                "companyName",
+                "customerName",
+                "preferredStartTime",
+                "preferredEndTime",
+              ],
             },
           ],
         },

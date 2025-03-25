@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.BIGINT,
       },
+      taskCategoryId: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+      },
       assignedTo: {
         type: DataTypes.BIGINT,
         allowNull: true,
@@ -61,6 +65,11 @@ module.exports = (sequelize, DataTypes) => {
     Tasks.belongsTo(models.Users, {
       foreignKey: "assignedTo",
       as: "assignedUser",
+    });
+
+    Tasks.belongsTo(models.TaskCategory, {
+      foreignKey: "taskCategoryId",
+      as: "taskCategory",
     });
   };
 

@@ -44,6 +44,7 @@ exports.addProduct = async (req, res, next) => {
         warrantyTerm,
         warrantyDescription,
         gstRate,
+        defaultPrice,
         productImageId,
         productManualId,
       },
@@ -61,6 +62,7 @@ exports.addProduct = async (req, res, next) => {
       warrantyTerm,
       warrantyDescription,
       gstRate,
+      defaultPrice,
     };
 
     const newProduct = await addProductData(objParams);
@@ -118,10 +120,13 @@ exports.addProduct = async (req, res, next) => {
 exports.getProduct = async (req, res, next) => {
   try {
     const {
-      query: { filterParams },
+      query: { filterParams, showInventoryPrice },
     } = req;
 
-    const brandListData = await getProductData({ filterParams });
+    const brandListData = await getProductData({
+      filterParams,
+      showInventoryPrice,
+    });
     sendJsonResponse(req, res, 200, brandListData, true, "Brand list fetched");
   } catch (error) {
     console.log("error :: ", error);
@@ -193,6 +198,7 @@ exports.updateProduct = async (req, res, next) => {
         warrantyTerm,
         warrantyDescription,
         gstRate,
+        defaultPrice,
         productImageId,
         productManualId,
       },
@@ -210,6 +216,7 @@ exports.updateProduct = async (req, res, next) => {
       warrantyTerm,
       warrantyDescription,
       gstRate,
+      defaultPrice,
       productId,
     };
 

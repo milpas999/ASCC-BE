@@ -30,6 +30,7 @@ exports.addProductData = async (objParams) => {
       warrantyTerm,
       warrantyDescription,
       gstRate,
+      defaultPrice,
     } = objParams;
 
     const productData = await Product.create({
@@ -44,6 +45,7 @@ exports.addProductData = async (objParams) => {
       warrantyTerm,
       warrantyDescription,
       gst: gstRate,
+      defaultPrice,
     });
 
     return productData;
@@ -67,6 +69,7 @@ exports.updateProductData = async (objParams) => {
       warrantyTerm,
       warrantyDescription,
       gstRate,
+      defaultPrice,
       productId,
     } = objParams;
 
@@ -83,6 +86,7 @@ exports.updateProductData = async (objParams) => {
         warrantyTerm,
         warrantyDescription,
         gst: gstRate,
+        defaultPrice,
       },
       {
         where: {
@@ -130,6 +134,7 @@ exports.getProductData = async (objParams) => {
       } = { pagination: {}, filter: {} },
       productId,
       arrProductIds = [],
+      showInventoryPrice = false,
     } = objParams || {};
 
     let productDataWhere = {};

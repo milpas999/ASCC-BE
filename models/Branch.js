@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      area: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       contactName: {
         type: DataTypes.STRING,
         allowNull: true,
